@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
-  <link href="https://googleapis.com/css2?family=Fredoka:wght@700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://googleapis.com" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; }
@@ -24,7 +24,6 @@
       background-color: #3b9cdc;
     }
 
-    /* --- DISEÑO DEL FONDO OPTIMIZADO PARA PC Y MÓVILES --- */
     .sky-background {
       position: absolute;
       top: 0;
@@ -33,21 +32,11 @@
       height: 100vh;
       background-image: url('fondo.jpg');
       background-size: cover;
-      background-position: center center;
+      background-position: center;
       z-index: 1;
     }
 
-    /* Ajuste especial para que la imagen se encoja y no corte a los personajes en pantallas de celular vertical */
-    @media (max-width: 768px) and (orientation: portrait) {
-      .sky-background {
-        background-size: contain; /* Encoge la imagen para que entren Woody y Buzz a los lados */
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-color: #3b9cdc; /* Rellena con el color exacto del cielo si sobra espacio arriba o abajo */
-      }
-    }
-
-    /* --- PANTALLA RECIBIDORA PARA DESBLOQUEAR EL AUDIO --- */
+    /* --- BOTÓN DE ENTRADA OBLIGATORIO PARA DESBLOQUEAR AUDIO --- */
     .audio-unlocker {
       position: fixed;
       top: 0;
@@ -93,7 +82,7 @@
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(254, 203, 5, 0); }
     }
 
-    /* --- TARJETA CENTRAL EN RESPONSIVE --- */
+    /* --- Tarjeta del Centro --- */
     .card {
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(5px);
@@ -110,24 +99,6 @@
       opacity: 0;
       transform: scale(0.8);
       transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
-    }
-
-    /* Ajuste fino para celulares: reduce el tamaño del cuadro para que no tape por completo a Woody y Buzz */
-    @media (max-width: 480px) {
-      .card {
-        padding: 25px 20px;
-        max-width: 320px; /* Se hace más angosta para dejar espacio visual a los lados */
-      }
-      .titulo {
-        font-size: 1.4rem !important;
-      }
-      .toy-style {
-        font-size: 1.9rem !important;
-      }
-      button {
-        padding: 12px 20px !important;
-        font-size: 1rem !important;
-      }
     }
 
     .card.show {
@@ -208,11 +179,14 @@
       color: white;
       border: 3px solid #b11319;
       z-index: 20;
+      position: relative;
+      transition: transform 0.15s ease-out; /* Transición rápida para el movimiento */
     }
   </style>
 </head>
 <body>
 
+  <!-- PANTALLA RECIBIDORA PARA DESBLOQUEAR EL AUDIO EN CELULARES -->
   <div class="audio-unlocker" id="bloqueo-audio" onclick="entrarInvitacion()">
     <button class="unlock-btn">🚀</button>
     <div class="unlock-text">Tienes una invitación especial...<br>¡Toca para abrir!</div>
@@ -243,8 +217,10 @@
     const fuenteAudio = document.getElementById('fuente-audio');
     let musicaIniciada = false;
 
+    // Esta función se ejecuta con el primer toque real del usuario, rompiendo el bloqueo del celular
     function entrarInvitacion() {
       if (!musicaIniciada) {
+        // Rompe-caché dinámico
         fuenteAudio.src = "Yo_Soy_Tu_Amigo_Fiel.mp3?v=" + new Date().getTime();
         musica.load();
         
@@ -253,28 +229,32 @@
           .catch((e) => console.log("Audio bloqueado:", e));
       }
 
+      // Oculta la pantalla de bienvenida y muestra la tarjeta animada
       pantallaBloqueo.style.opacity = "0";
       pantallaBloqueo.style.visibility = "hidden";
       tarjeta.classList.add("show");
     }
 
-    btnNo.addEventListener('mouseenter', () => {
-      btnNo.style.transform = 'scale(0)';
-      btnNo.style.opacity = '0';
-      btnNo.style.pointerEvents = 'none';
-    });
+    // Comportamiento del botón "No" (Mover arriba, derecha y abajo sin ir a la izquierda)
+    function moverBotonNo() {
+      // Valores positivos en X obligan al botón a ir a la derecha (evita colisionar con el botón Sí)
+      const randomX = Math.floor(Math.random() * 80) + 20; 
+      
+      // Valores en Y que permiten subir (negativos) o bajar (positivos)
+      const randomY = Math.floor(Math.random() * 160) - 80; 
+
+      btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    btnNo.addEventListener('mouseenter', moverBotonNo);
 
     btnNo.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      btnNo.style.transform = 'scale(0)';
-      btnNo.style.opacity = '0';
-      btnNo.style.pointerEvents = 'none';
+      moverBotonNo();
     });
 
     tarjeta.addEventListener('mouseleave', () => {
-      btnNo.style.transform = 'scale(1)';
-      btnNo.style.opacity = '1';
-      btnNo.style.pointerEvents = 'auto';
+      btnNo.style.transform = 'translate(0px, 0px)';
     });
 
     function abrirWhatsApp() {
