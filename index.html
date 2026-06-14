@@ -5,13 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Invitación Especial: Toy Story 5 🚀</title>
   
-  <!-- Tipografías de película -->
   <link rel="preconnect" href="https://googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
   <link href="https://googleapis.com/css2?family=Fredoka:wght@700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-  
-  <!-- Librería de confeti por si el navegador permite ejecutarlo en paralelo -->
-  <script src="https://jsdelivr.net"></script>
 
   <style>
     * { box-sizing: border-box; }
@@ -28,7 +24,6 @@
       background-color: #3b9cdc;
     }
 
-    /* --- TU IMAGEN LOCAL DE WOODY Y BUZZ --- */
     .sky-background {
       position: absolute;
       top: 0;
@@ -41,7 +36,6 @@
       z-index: 1;
     }
 
-    /* --- Tarjeta del Centro --- */
     .card {
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(5px);
@@ -52,8 +46,8 @@
       max-width: 440px;
       z-index: 10;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
-      border: 8px solid #fecb05; /* Amarillo Woody */
-      outline: 4px solid #00377a; /* Azul Buzz */
+      border: 8px solid #fecb05; 
+      outline: 4px solid #00377a; 
       position: relative;
     }
 
@@ -82,8 +76,8 @@
     .toy-style {
       display: block;
       font-size: 2.5rem;
-      color: #e51b24; /* Rojo Pixar */
-      text-shadow: 3px 3px 0px #fecb05, -1px -1px 0px #00377a, 1px -1px 0px #00377a, -1px 1px 0px #00377a, -1px 1px 0px #00377a;
+      color: #e51b24; 
+      text-shadow: 3px 3px 0px #fecb05, -1px -1px 0px #00377a, 1px -1px 0px #00377a, -1px 1px 0px #00377a, 1px 1px 0px #00377a;
       transform: rotate(-2deg);
       margin: 10px 0;
     }
@@ -96,7 +90,6 @@
       font-weight: bold;
     }
 
-    /* --- Contenedor de Botones --- */
     .buttons-container {
       display: flex;
       justify-content: center;
@@ -114,23 +107,24 @@
       border-radius: 15px;
       cursor: pointer;
       box-shadow: 0 6px 0px rgba(0,0,0,0.15);
-      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease;
+      transition: transform 0.2s ease, opacity 0.2s ease;
       text-decoration: none;
       display: inline-block;
     }
 
     #btn-si {
-      background-color: #78c043; /* Verde Buzz */
+      background-color: #78c043; 
       color: white;
-      border: 3px solid #9c4ae3; /* Morado Buzz */
-      z-index: 20;
+      border: 3px solid #9c4ae3; 
+      z-index: 30; /* Capa prioritaria absoluta */
+      position: relative;
     }
 
     #btn-no {
-      background-color: #e51b24; /* Rojo peligro */
+      background-color: #e51b24; 
       color: white;
       border: 3px solid #b11319;
-      transform-origin: center;
+      z-index: 20;
     }
   </style>
 </head>
@@ -144,56 +138,49 @@
     <p class="subtitulo">¡Al infinito y más allá!</p>
     
     <div class="buttons-container">
-      <!-- SOLUCIÓN 100% INMUNE A BLOQUEOS: Enlace directo nativo usando wa.me oficial -->
-      <a id="btn-si" class="btn-link" href="https://wa.me" onclick="lanzarConfeti()">¡SÍ, CLARO! 🚀</a>
+      <!-- Enlace HTML puro directo al ecosistema nativo de WhatsApp móvil/web sin intermediarios script -->
+      <a id="btn-si" class="btn-link" href="https://wa.me" onclick="encenderMusica()">¡SÍ, CLARO! 🚀</a>
       <button id="btn-no">No 😢</button>
     </div>
   </div>
 
-  <!-- Enlace directo de audio desde Internet Archive -->
   <audio id="musica-toy" loop preload="auto">
     <source src="https://archive.org" type="audio/mpeg">
   </audio>
 
   <script>
     const btnNo = document.getElementById('btn-no');
-    const btnSi = document.getElementById('btn-si');
     const musica = document.getElementById('musica-toy');
     let musicaIniciada = false;
 
     function encenderMusica() {
       if (!musicaIniciada) {
-        musica.play().catch(() => console.log("Audio activo"));
+        musica.play().catch(() => console.log("Audio deshabilitado"));
         musicaIniciada = true;
       }
     }
 
+    // El botón se oculta de forma limpia cambiando sus dimensiones para que no obstruya los clics en móviles
     btnNo.addEventListener('mouseenter', () => {
       encenderMusica();
       btnNo.style.transform = 'scale(0)';
       btnNo.style.opacity = '0';
       btnNo.style.pointerEvents = 'none';
-      btnSi.style.transform = 'scale(1.2)';
+    });
+
+    btnNo.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      encenderMusica();
+      btnNo.style.transform = 'scale(0)';
+      btnNo.style.opacity = '0';
+      btnNo.style.pointerEvents = 'none';
     });
 
     document.querySelector('.card').addEventListener('mouseleave', () => {
       btnNo.style.transform = 'scale(1)';
       btnNo.style.opacity = '1';
       btnNo.style.pointerEvents = 'auto';
-      btnSi.style.transform = 'scale(1)';
     });
-
-    // Esta función solo lanza la animación visual sin interferir con la apertura de WhatsApp
-    function lanzarConfeti() {
-      encenderMusica();
-      confetti({
-        particleCount: 150,
-        spread: 90,
-        origin: { y: 0.6 },
-        colors: ['#fecb05', '#e51b24', '#78c043', '#9c4ae3', '#00377a'],
-        zIndex: 99999
-      });
-    }
   </script>
 </body>
 </html>
