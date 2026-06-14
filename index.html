@@ -30,7 +30,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-image: url('fondo.jpg');
+      background-image: url('fondo1.jpf'); /* Nombre modificado aquí */
       background-size: cover;
       background-position: center;
       z-index: 1;
@@ -180,7 +180,7 @@
       border: 3px solid #b11319;
       z-index: 20;
       position: relative;
-      transition: transform 0.15s ease-out; /* Transición rápida para el movimiento */
+      transition: transform 0.15s ease-out;
     }
   </style>
 </head>
@@ -217,10 +217,8 @@
     const fuenteAudio = document.getElementById('fuente-audio');
     let musicaIniciada = false;
 
-    // Esta función se ejecuta con el primer toque real del usuario, rompiendo el bloqueo del celular
     function entrarInvitacion() {
       if (!musicaIniciada) {
-        // Rompe-caché dinámico
         fuenteAudio.src = "Yo_Soy_Tu_Amigo_Fiel.mp3?v=" + new Date().getTime();
         musica.load();
         
@@ -229,18 +227,13 @@
           .catch((e) => console.log("Audio bloqueado:", e));
       }
 
-      // Oculta la pantalla de bienvenida y muestra la tarjeta animada
       pantallaBloqueo.style.opacity = "0";
       pantallaBloqueo.style.visibility = "hidden";
       tarjeta.classList.add("show");
     }
 
-    // Comportamiento del botón "No" (Mover arriba, derecha y abajo sin ir a la izquierda)
     function moverBotonNo() {
-      // Valores positivos en X obligan al botón a ir a la derecha (evita colisionar con el botón Sí)
       const randomX = Math.floor(Math.random() * 80) + 20; 
-      
-      // Valores en Y que permiten subir (negativos) o bajar (positivos)
       const randomY = Math.floor(Math.random() * 160) - 80; 
 
       btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
