@@ -6,11 +6,11 @@
   <title>Invitación Especial: Toy Story 5 🚀</title>
   
   <!-- Tipografías de película -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
-  <link href="https://googleapis.com" rel="stylesheet">
+  <link href="https://googleapis.com/css2?family=Fredoka:wght@700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
   
-  <!-- Librería para lanzar confeti al aceptar -->
+  <!-- Librería para lanzar confeti al aceptar (Versión oficial y estable) -->
   <script src="https://jsdelivr.net"></script>
 
   <style>
@@ -147,7 +147,7 @@
     </div>
   </div>
 
-  <!-- Enlace de música actualizado -->
+  <!-- Enlace directo de audio desde Internet Archive -->
   <audio id="musica-toy" loop preload="auto">
     <source src="https://archive.org" type="audio/mpeg">
   </audio>
@@ -183,7 +183,7 @@
     function aceptarInvitacion() {
       encenderMusica();
       
-      // 1. Lanza la ráfaga de confeti con colores de Toy Story
+      // 1. Lanzar confeti inmediatamente en la pantalla antes de la redirección
       confetti({
         particleCount: 150,
         spread: 85,
@@ -191,14 +191,12 @@
         colors: ['#fecb05', '#e51b24', '#78c043', '#9c4ae3', '#00377a']
       });
 
-      // 2. Espera medio segundo y abre WhatsApp correctamente
+      // 2. Redirección directa y segura de WhatsApp sin bloqueos de pestañas emergentes
       setTimeout(() => {
         const telefono = "50661547634";
         const mensaje = encodeURIComponent("¡Sí, quiero ir contigo! 🚀🤠🎬");
-        
-        // Estructura de API correcta
-        window.open(`https://whatsapp.com{telefono}&text=${mensaje}`, '_blank');
-      }, 600);
+        window.location.href = `https://whatsapp.com{telefono}&text=${mensaje}`;
+      }, 400); // 400 milisegundos de espera para ver el confeti estallar
     }
   </script>
 </body>
