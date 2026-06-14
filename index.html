@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
-  <link href="https://googleapis.com" rel="stylesheet">
+  <link href="https://googleapis.com/css2?family=Fredoka:wght@700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; }
@@ -179,8 +179,6 @@
       color: white;
       border: 3px solid #b11319;
       z-index: 20;
-      position: relative;
-      transition: transform 0.15s ease-out; /* Transición rápida para el movimiento */
     }
   </style>
 </head>
@@ -235,26 +233,24 @@
       tarjeta.classList.add("show");
     }
 
-    // Comportamiento del botón "No" (Mover arriba, derecha y abajo sin ir a la izquierda)
-    function moverBotonNo() {
-      // Valores positivos en X obligan al botón a ir a la derecha (evita colisionar con el botón Sí)
-      const randomX = Math.floor(Math.random() * 80) + 20; 
-      
-      // Valores en Y que permiten subir (negativos) o bajar (positivos)
-      const randomY = Math.floor(Math.random() * 160) - 80; 
-
-      btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
-    }
-
-    btnNo.addEventListener('mouseenter', moverBotonNo);
+    // Comportamiento del botón "No"
+    btnNo.addEventListener('mouseenter', () => {
+      btnNo.style.transform = 'scale(0)';
+      btnNo.style.opacity = '0';
+      btnNo.style.pointerEvents = 'none';
+    });
 
     btnNo.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      moverBotonNo();
+      btnNo.style.transform = 'scale(0)';
+      btnNo.style.opacity = '0';
+      btnNo.style.pointerEvents = 'none';
     });
 
     tarjeta.addEventListener('mouseleave', () => {
-      btnNo.style.transform = 'translate(0px, 0px)';
+      btnNo.style.transform = 'scale(1)';
+      btnNo.style.opacity = '1';
+      btnNo.style.pointerEvents = 'auto';
     });
 
     function abrirWhatsApp() {
