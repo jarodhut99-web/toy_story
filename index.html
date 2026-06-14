@@ -36,6 +36,53 @@
       z-index: 1;
     }
 
+    /* --- BOTÓN DE ENTRADA OBLIGATORIO PARA DESBLOQUEAR AUDIO --- */
+    .audio-unlocker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #3b9cdc;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .unlock-btn {
+      background: #fecb05;
+      border: 6px solid #00377a;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      font-size: 50px;
+      cursor: pointer;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+      animation: pulse 1.5s infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .unlock-text {
+      font-family: 'Fredoka', cursive;
+      color: white;
+      margin-top: 20px;
+      font-size: 1.5rem;
+      text-shadow: 2px 2px 0px #00377a;
+      text-align: center;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(254, 203, 5, 0.7); }
+      70% { transform: scale(1.08); box-shadow: 0 0 0 15px rgba(254, 203, 5, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(254, 203, 5, 0); }
+    }
+
+    /* --- Tarjeta del Centro --- */
     .card {
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(5px);
@@ -49,6 +96,14 @@
       border: 8px solid #fecb05; 
       outline: 4px solid #00377a; 
       position: relative;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: scale(1);
     }
 
     .woody-badge {
@@ -129,9 +184,15 @@
 </head>
 <body>
 
+  <!-- PANTALLA RECIBIDORA PARA DESBLOQUEAR EL AUDIO EN CELULARES -->
+  <div class="audio-unlocker" id="bloqueo-audio" onclick="entrarInvitacion()">
+    <button class="unlock-btn">🚀</button>
+    <div class="unlock-text">Tienes una invitación especial...<br>¡Toca para abrir!</div>
+  </div>
+
   <div class="sky-background"></div>
 
-  <div class="card">
+  <div class="card" id="tarjeta-invitacion">
     <div class="woody-badge">⭐</div>
     <h1 class="titulo">¿Quieres ir a ver <span class="toy-style">Toy Story 5</span> el 26 de Junio al cine conmigo?</h1>
     <p class="subtitulo">¡Al infinito y más allá!</p>
@@ -142,36 +203,38 @@
     </div>
   </div>
 
-  <!-- Audio local con sistema dinámico anti-bloqueo de caché -->
   <audio id="musica-toy" loop preload="auto">
     <source id="fuente-audio" src="Yo_Soy_Tu_Amigo_Fiel.mp3" type="audio/mpeg">
   </audio>
 
   <script>
     const btnNo = document.getElementById('btn-no');
+    const tarjeta = document.getElementById('tarjeta-invitacion');
+    const pantallaBloqueo = document.getElementById('bloqueo-audio');
     const musica = document.getElementById('musica-toy');
     const fuenteAudio = document.getElementById('fuente-audio');
     let musicaIniciada = false;
 
-    // Forzar al navegador a recargar el archivo de audio real de forma limpia
-    function inicializarAudioGarantizado() {
+    // Esta función se ejecuta con el primer toque real del usuario, rompiendo el bloqueo del celular
+    function entrarInvitacion() {
       if (!musicaIniciada) {
-        // Añade una firma de tiempo para engañar a la caché del navegador
+        // Rompe-caché dinámico
         fuenteAudio.src = "Yo_Soy_Tu_Amigo_Fiel.mp3?v=" + new Date().getTime();
-        musica.load(); 
+        musica.load();
         
         musica.play()
           .then(() => { musicaIniciada = true; })
-          .catch((error) => console.log("Permiso de audio retenido en espera de toque:", error));
+          .catch((e) => console.log("Audio bloqueado:", e));
       }
+
+      // Oculta la pantalla de bienvenida y muestra la tarjeta animada
+      pantallaBloqueo.style.opacity = "0";
+      pantallaBloqueo.style.visibility = "hidden";
+      tarjeta.classList.add("show");
     }
 
-    // Escucha cualquier tipo de interacción inicial física en la pantalla
-    document.body.addEventListener('click', inicializarAudioGarantizado, { once: true });
-    document.body.addEventListener('touchstart', inicializarAudioGarantizado, { once: true });
-
+    // Comportamiento del botón "No"
     btnNo.addEventListener('mouseenter', () => {
-      inicializarAudioGarantizado();
       btnNo.style.transform = 'scale(0)';
       btnNo.style.opacity = '0';
       btnNo.style.pointerEvents = 'none';
@@ -179,21 +242,18 @@
 
     btnNo.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      inicializarAudioGarantizado();
       btnNo.style.transform = 'scale(0)';
       btnNo.style.opacity = '0';
       btnNo.style.pointerEvents = 'none';
     });
 
-    document.querySelector('.card').addEventListener('mouseleave', () => {
+    tarjeta.addEventListener('mouseleave', () => {
       btnNo.style.transform = 'scale(1)';
       btnNo.style.opacity = '1';
       btnNo.style.pointerEvents = 'auto';
     });
 
     function abrirWhatsApp() {
-      inicializarAudioGarantizado();
-      
       const numero = "50661547634";
       const mensaje = encodeURIComponent("¡Sí, quiero ir contigo al cine a ver Toy Story 5! 🚀🤠🎬");
       
