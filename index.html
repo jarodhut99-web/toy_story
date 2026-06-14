@@ -99,7 +99,7 @@
       position: relative;
     }
 
-    button, .btn-link {
+    button {
       font-family: 'Fredoka', cursive;
       padding: 15px 30px;
       font-size: 1.2rem;
@@ -109,7 +109,6 @@
       box-shadow: 0 6px 0px rgba(0,0,0,0.15);
       transition: transform 0.2s ease, opacity 0.2s ease;
       text-decoration: none;
-      display: inline-block;
     }
 
     #btn-si {
@@ -138,14 +137,15 @@
     <p class="subtitulo">¡Al infinito y más allá!</p>
     
     <div class="buttons-container">
-      <!-- PROTOCOLO DE DEEP LINKING NATIVO: Salta directo a la app sin pasar por el navegador web -->
-      <a id="btn-si" class="btn-link" href="whatsapp://send?phone=50661547634&text=%C2%A1S%C3%AD%2C%20quiero%20ir%20contigo%20al%20cine%20a%20ver%20Toy%20Story%205%21%20%F0%9F%9A%80%F0%9F%A5%A0%F0%9F%8E%AC" onclick="encenderMusica()">¡SÍ, CLARO! 🚀</a>
+      <!-- Sistema de ejecución seguro por función con soporte multi-plataforma -->
+      <button id="btn-si" onclick="abrirWhatsApp()">¡SÍ, CLARO! 🚀</button>
       <button id="btn-no">No 😢</button>
     </div>
   </div>
 
+  <!-- Audio local con el nombre exacto de tu archivo en tu repositorio de GitHub -->
   <audio id="musica-toy" loop preload="auto">
-    <source src="https://archive.org" type="audio/mpeg">
+    <source src="Yo_Soy_Tu_Amigo_Fiel.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -155,10 +155,14 @@
 
     function encenderMusica() {
       if (!musicaIniciada) {
-        musica.play().catch(() => console.log("Audio activo"));
+        musica.play().catch((error) => console.log("Permiso de audio retenido:", error));
         musicaIniciada = true;
       }
     }
+
+    // Activa el audio local con cualquier toque en la pantalla (exigencia de seguridad móvil)
+    document.body.addEventListener('click', encenderMusica, { once: true });
+    document.body.addEventListener('touchstart', encenderMusica, { once: true });
 
     btnNo.addEventListener('mouseenter', () => {
       encenderMusica();
@@ -180,6 +184,25 @@
       btnNo.style.opacity = '1';
       btnNo.style.pointerEvents = 'auto';
     });
+
+    // SISTEMA GLOBAL DE REDIRECCIÓN DEFINITIVO 
+    function abrirWhatsApp() {
+      encenderMusica();
+      
+      const numero = "50661547634";
+      const mensaje = encodeURIComponent("¡Sí, quiero ir contigo al cine a ver Toy Story 5! 🚀🤠🎬");
+      
+      const deepLink = `whatsapp://send?phone=${numero}&text=${mensaje}`;
+      const webLink = `https://whatsapp.com{numero}&text=${mensaje}`;
+      
+      // Intentar forzar la apertura de la aplicación nativa en iPhone / Android
+      window.location.href = deepLink;
+      
+      // Respaldo de seguridad en caso de fallo: abre la API web en pestaña nueva tras 250ms
+      setTimeout(() => {
+        window.open(webLink, '_blank');
+      }, 250);
+    }
   </script>
 </body>
 </html>
