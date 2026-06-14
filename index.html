@@ -183,26 +183,27 @@
     function aceptarInvitacion() {
       encenderMusica();
       
-      // 1. Lanzamos el confeti al frente de todo usando zIndex elevado
+      // 1. Lanzamos el confeti al frente absoluto en el instante exacto del click
       confetti({
-        particleCount: 150,
-        spread: 85,
+        particleCount: 180,
+        spread: 100,
         origin: { y: 0.6 },
         colors: ['#fecb05', '#e51b24', '#78c043', '#9c4ae3', '#00377a'],
-        zIndex: 9999
+        zIndex: 99999
       });
 
-      // 2. Transición fluida a WhatsApp sin que el navegador bloquee la acción
-      setTimeout(() => {
-        const telefono = "50661547634";
-        const mensaje = encodeURIComponent("¡Sí, quiero ir contigo! 🚀🤠🎬");
-        const urlWhatsapp = `https://whatsapp.com{telefono}&text=${mensaje}`;
-        
-        // Abre de forma segura en pestaña nueva si lo permite, si no, redirige en la misma
-        if (!window.open(urlWhatsapp, '_blank')) {
-            window.location.href = urlWhatsapp;
-        }
-      }, 800); // 800ms permiten disfrutar de la explosión visual del confeti
+      // 2. Ejecución directa e inmediata de WhatsApp ligada al evento click para evitar bloqueos del navegador
+      const telefono = "50661547634";
+      const mensaje = encodeURIComponent("¡Sí, quiero ir contigo! 🚀🤠🎬");
+      const urlWhatsapp = `https://whatsapp.com{telefono}&text=${mensaje}`;
+      
+      // Intenta abrir en una pestaña nueva limpia de inmediato
+      const nuevaPestana = window.open(urlWhatsapp, '_blank');
+      
+      // Si el navegador bloqueó la pestaña nueva, redirige en la misma pantalla para que funcione sí o sí
+      if (!nuevaPestana || nuevaPestana.closed || typeof nuevaPestana.closed == 'undefined') {
+          window.location.href = urlWhatsapp;
+      }
     }
   </script>
 </body>
