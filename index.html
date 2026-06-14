@@ -16,25 +16,36 @@
       margin: 0;
       height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: flex-start; /* Cambio: Alinea la tarjeta en la parte superior */
+      flex-direction: column; /* Organiza la pantalla en dos secciones verticales */
+      justify-content: space-between;
+      align-items: center;
       font-family: 'Quicksand', sans-serif;
       overflow: hidden;
       position: relative;
-      background-color: #3b9cdc;
-      padding-top: 40px; /* Espacio superior para que la tarjeta no pegue al borde del celular */
+      background-color: #55b3ff; /* Color de cielo unificado */
     }
 
-    .sky-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+    /* --- SECCIÓN SUPERIOR: CIELO Y TARJETA --- */
+    .top-section {
+      width: 100%;
+      flex: 1; /* Ocupa todo el espacio disponible arriba */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      padding: 20px 10px 0 10px;
+    }
+
+    /* --- SECCIÓN INFERIOR: PERSONAJES FIJOS ABAJO --- */
+    .characters-footer {
+      width: 100%;
+      height: 45vh; /* Reserva el 45% de la pantalla abajo solo para los personajes */
       background-image: url('fondo1.jpg');
       background-size: cover;
-      background-position: bottom center; /* Cambio: Fija los personajes abajo para que no se corten */
-      z-index: 1;
+      background-position: bottom center; /* Corta la parte de arriba y muestra solo a los personajes */
+      z-index: 2;
+      position: relative;
     }
 
     /* --- BOTÓN DE ENTRADA OBLIGATORIO PARA DESBLOQUEAR AUDIO --- */
@@ -85,15 +96,14 @@
 
     /* --- Tarjeta del Centro --- */
     .card {
-      background: rgba(255, 255, 255, 0.93); /* Un toque más transparente para ver el cielo de fondo */
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(5px);
-      padding: 25px 20px; /* Reducción de relleno para que ocupe menos espacio vertical */
+      padding: 25px 20px;
       border-radius: 25px;
       text-align: center;
-      width: 92%;
-      max-width: 400px; /* Límite de ancho optimizado para celulares */
-      z-index: 10;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+      width: 100%;
+      max-width: 390px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
       border: 6px solid #fecb05; 
       outline: 4px solid #00377a; 
       position: relative;
@@ -124,14 +134,14 @@
     .titulo {
       font-family: 'Fredoka', cursive;
       color: #00377a;
-      font-size: 1.5rem; /* Ajustado el tamaño de la letra para ganar espacio libre */
+      font-size: 1.4rem;
       line-height: 1.3;
       margin-top: 5px;
     }
 
     .toy-style {
       display: block;
-      font-size: 2.1rem; /* Reducido levemente el texto estilizado */
+      font-size: 2rem;
       color: #e51b24; 
       text-shadow: 3px 3px 0px #fecb05, -1px -1px 0px #00377a, 1px -1px 0px #00377a, -1px 1px 0px #00377a, -1px 1px 0px #00377a;
       transform: rotate(-2deg);
@@ -140,7 +150,7 @@
 
     .subtitulo {
       color: #444;
-      font-size: 1rem;
+      font-size: 0.95rem;
       margin: 15px 0;
       font-style: italic;
       font-weight: bold;
@@ -157,7 +167,7 @@
 
     button {
       font-family: 'Fredoka', cursive;
-      padding: 12px 22px; /* Botones levemente más compactos */
+      padding: 12px 22px;
       font-size: 1.1rem;
       border: none;
       border-radius: 15px;
@@ -193,18 +203,22 @@
     <div class="unlock-text">Tienes una invitación especial...<br>¡Toca para abrir!</div>
   </div>
 
-  <div class="sky-background"></div>
-
-  <div class="card" id="tarjeta-invitacion">
-    <div class="woody-badge">⭐</div>
-    <h1 class="titulo">¿Quieres ir a ver <span class="toy-style">Toy Story 5</span> el 26 de Junio al cine conmigo?</h1>
-    <p class="subtitulo">¡Al infinito y más allá!</p>
-    
-    <div class="buttons-container">
-      <button id="btn-si" onclick="abrirWhatsApp()">¡SÍ, CLARO! 🚀</button>
-      <button id="btn-no">No 😢</button>
+  <!-- SECCIÓN DE ARRIBA: CONTIENE ÚNICAMENTE LA TARJETA -->
+  <div class="top-section">
+    <div class="card" id="tarjeta-invitacion">
+      <div class="woody-badge">⭐</div>
+      <h1 class="titulo">¿Quieres ir a ver <span class="toy-style">Toy Story 5</span> el 26 de Junio al cine conmigo?</h1>
+      <p class="subtitulo">¡Al infinito y más allá!</p>
+      
+      <div class="buttons-container">
+        <button id="btn-si" onclick="abrirWhatsApp()">¡SÍ, CLARO! 🚀</button>
+        <button id="btn-no">No 😢</button>
+      </div>
     </div>
   </div>
+
+  <!-- SECCIÓN DE ABAJO: CONTIENE A LOS PERSONAJES COMO FONDO -->
+  <div class="characters-footer"></div>
 
   <audio id="musica-toy" loop preload="auto">
     <source id="fuente-audio" src="Yo_Soy_Tu_Amigo_Fiel.mp3" type="audio/mpeg">
@@ -235,7 +249,7 @@
 
     function moverBotonNo() {
       const randomX = Math.floor(Math.random() * 60) + 15; 
-      const randomY = Math.floor(Math.random() * 120) - 60; 
+      const randomY = Math.floor(Math.random() * 100) - 50; 
 
       btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
     }
