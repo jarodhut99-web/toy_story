@@ -137,35 +137,41 @@
     <p class="subtitulo">¡Al infinito y más allá!</p>
     
     <div class="buttons-container">
-      <!-- Sistema de ejecución seguro por función con soporte multi-plataforma -->
       <button id="btn-si" onclick="abrirWhatsApp()">¡SÍ, CLARO! 🚀</button>
       <button id="btn-no">No 😢</button>
     </div>
   </div>
 
-  <!-- Audio local con el nombre exacto de tu archivo en tu repositorio de GitHub -->
+  <!-- Audio local con sistema dinámico anti-bloqueo de caché -->
   <audio id="musica-toy" loop preload="auto">
-    <source src="Yo_Soy_Tu_Amigo_Fiel.mp3" type="audio/mpeg">
+    <source id="fuente-audio" src="Yo_Soy_Tu_Amigo_Fiel.mp3" type="audio/mpeg">
   </audio>
 
   <script>
     const btnNo = document.getElementById('btn-no');
     const musica = document.getElementById('musica-toy');
+    const fuenteAudio = document.getElementById('fuente-audio');
     let musicaIniciada = false;
 
-    function encenderMusica() {
+    // Forzar al navegador a recargar el archivo de audio real de forma limpia
+    function inicializarAudioGarantizado() {
       if (!musicaIniciada) {
-        musica.play().catch((error) => console.log("Permiso de audio retenido:", error));
-        musicaIniciada = true;
+        // Añade una firma de tiempo para engañar a la caché del navegador
+        fuenteAudio.src = "Yo_Soy_Tu_Amigo_Fiel.mp3?v=" + new Date().getTime();
+        musica.load(); 
+        
+        musica.play()
+          .then(() => { musicaIniciada = true; })
+          .catch((error) => console.log("Permiso de audio retenido en espera de toque:", error));
       }
     }
 
-    // Activa el audio local con cualquier toque en la pantalla (exigencia de seguridad móvil)
-    document.body.addEventListener('click', encenderMusica, { once: true });
-    document.body.addEventListener('touchstart', encenderMusica, { once: true });
+    // Escucha cualquier tipo de interacción inicial física en la pantalla
+    document.body.addEventListener('click', inicializarAudioGarantizado, { once: true });
+    document.body.addEventListener('touchstart', inicializarAudioGarantizado, { once: true });
 
     btnNo.addEventListener('mouseenter', () => {
-      encenderMusica();
+      inicializarAudioGarantizado();
       btnNo.style.transform = 'scale(0)';
       btnNo.style.opacity = '0';
       btnNo.style.pointerEvents = 'none';
@@ -173,7 +179,7 @@
 
     btnNo.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      encenderMusica();
+      inicializarAudioGarantizado();
       btnNo.style.transform = 'scale(0)';
       btnNo.style.opacity = '0';
       btnNo.style.pointerEvents = 'none';
@@ -185,9 +191,8 @@
       btnNo.style.pointerEvents = 'auto';
     });
 
-    // SISTEMA GLOBAL DE REDIRECCIÓN DEFINITIVO 
     function abrirWhatsApp() {
-      encenderMusica();
+      inicializarAudioGarantizado();
       
       const numero = "50661547634";
       const mensaje = encodeURIComponent("¡Sí, quiero ir contigo al cine a ver Toy Story 5! 🚀🤠🎬");
@@ -195,10 +200,8 @@
       const deepLink = `whatsapp://send?phone=${numero}&text=${mensaje}`;
       const webLink = `https://whatsapp.com{numero}&text=${mensaje}`;
       
-      // Intentar forzar la apertura de la aplicación nativa en iPhone / Android
       window.location.href = deepLink;
       
-      // Respaldo de seguridad en caso de fallo: abre la API web en pestaña nueva tras 250ms
       setTimeout(() => {
         window.open(webLink, '_blank');
       }, 250);
