@@ -181,6 +181,8 @@
       z-index: 20;
       position: relative;
       transition: transform 0.15s ease-out; /* Transición rápida para el movimiento */
+      outline: 40px solid transparent;      /* Escudo invisible para detectar cercanía */
+      outline-offset: -40px;
     }
   </style>
 </head>
@@ -238,10 +240,10 @@
     // Comportamiento del botón "No" (Mover arriba, derecha y abajo sin ir a la izquierda)
     function moverBotonNo() {
       // Valores positivos en X obligan al botón a ir a la derecha (evita colisionar con el botón Sí)
-      const randomX = Math.floor(Math.random() * 80) + 20; 
+      const randomX = Math.floor(Math.random() * 120) + 40; 
       
       // Valores en Y que permiten subir (negativos) o bajar (positivos)
-      const randomY = Math.floor(Math.random() * 160) - 80; 
+      const randomY = Math.floor(Math.random() * 180) - 90; 
 
       btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
     }
